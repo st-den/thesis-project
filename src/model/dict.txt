@@ -1,0 +1,9 @@
+DRY_tumble_yes
+PROF_dry_no
+WASH_30
+PROF_dry_p
+BLEACH_no
+IRON_yes
+WASH_hand
+DRY_tumble_no
+WASH_40

@@ -1,0 +1,117 @@
+ScreenManager:
+    transition: app.transition
+
+    SymbolsListScreen:
+        id: symbols_list_screen
+        name: "SymbolsListScreen"
+        on_pre_enter:
+            root.transition.direction = "up"
+
+    CameraScreen:
+        id: camera_screen
+        name: "CameraScreen"
+        on_pre_enter:
+            root.transition.direction = "down"
+
+    ResultsScreen:
+        id: results_screen
+        name: "ResultsScreen"
+        on_pre_enter:
+            root.transition.direction = "down"
+
+<SymbolsListScreen@Screen>:
+    MDBoxLayout:
+
+        MDTabs:
+            id: tabs
+
+        MDBottomAppBar:
+            MDToolbar:
+                left_action_items: self.parent.left_action_items
+                on_action_button:
+                    if app.prepare_scanner(): root.manager.current = "CameraScreen"
+
+<CameraScreen@Screen>:
+    MDBoxLayout:
+        Widget:
+            id: scanner
+            Camera:
+                id: camera
+                index: 0
+                resolution: (1920, 1080)
+
+                size_hint: (None, None)
+                width: root.height
+                height: root.width
+                allow_stretch: True
+                keep_ratio: True
+
+                center: scanner.center
+                canvas.before:
+                    PushMatrix
+                    Rotate:
+                        angle: -90
+                        origin: self.center
+                canvas.after:
+                    PopMatrix
+
+        MDBottomAppBar:
+            MDToolbar:
+                left_action_items:
+                    [["arrow-left", lambda _: setattr(root.manager, "current", "SymbolsListScreen")]] \
+                    + self.parent.left_action_items
+                on_action_button:
+                    if app.scan_photo(scanner): root.manager.current = "ResultsScreen"
+
+<ResultsScreen@Screen>:
+    on_leave:
+        results.clear_widgets()
+
+    ScrollView:
+        MDBoxLayout:
+            id: results
+            adaptive_height: True
+            padding:[0, 0, 0, dp(60)]
+
+    MDBottomAppBar:
+        MDToolbar:
+            left_action_items:
+                [["arrow-left", lambda _: setattr(root.manager, "current", "SymbolsListScreen")]] \
+                + self.parent.left_action_items
+            on_action_button:
+                root.manager.current = "CameraScreen"
+
+<MDBoxLayout>:
+    orientation: "vertical"
+
+<MDTabs>:
+    tab_bar_height: dp(60)
+    tab_indicator_height: dp(2)
+    text_color_normal: app.theme_cls.bg_light
+    color_indicator: app.theme_cls.bg_light
+    elevation: 10
+    tab_indicator_anim: True
+    anim_threshold: 0
+    on_tab_switch: app.populate_tab(*args)
+
+<Tab@FloatLayout+MDTabsBase>:
+    text:
+        "[size=30sp][font=ginetex.ttf]{glyph}[/font][/size]\n[size=15sp][b]{title}[/b][/size]" \
+        .format(glyph=self.glyph,title=self.title)
+    populated: False
+
+    ScrollView:
+        MDList:
+            padding: (0, dp(20))
+            id: symbols
+
+<MDToolbar>:
+    type: "bottom"
+    title: "Laundry Scan"
+    icon: "camera"
+    mode: "end"
+    spacing: dp(5)
+    on_parent: self.action_button.text_color = app.theme_cls.bg_light
+
+<MDBottomAppBar>:
+    left_action_items: [["information-outline", app.show_info]]
