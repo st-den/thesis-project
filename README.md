@@ -6,4 +6,4 @@ The tech stack is the following: Python for a programming language, Kivy/KivyMD 
 
 The training set consists — roughly — of the available photos from a Kaggle [competition](https://www.kaggle.com/c/identification-care-symbols/discussion/96414) (1/4), Care Label Recognition [paper](https://cmp.felk.cvut.cz/~matas/papers/kralicek-2019-care_labels-icdar.pdf) dataset (1/4) and my own findings (2/4), totalling 200 pictures.
 
-This turned out to be an unexpectedly hard problem to crack, but quite an interesting one, nevertheless. I profoundly enjoyed the challenge, and would gladly share some pitfalls on this topic. Feel free to contact me! :)
+This turned out to be an unexpectedly hard problem to crack, but quite an interesting one, nevertheless. I profoundly enjoyed the challenge, and would gladly tell about the pitfalls of this topic. Feel free to contact me! :)
